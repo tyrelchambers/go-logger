@@ -1,0 +1,35 @@
+{{ define "main" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+    <div id="status"></div>
+    <button hx-get="/test" hx-swap="none">Click</button>
+    <button hx-post="/clear" hx-swap="none">Clear</button>
+    <div hx-ext="ws" ws-connect="/ws"></div>
+    <div id="output"></div>
+  </body>
+
+  <script>
+    var output = document.getElementById("output");
+    const status = document.getElementById("status");
+    var socket = new WebSocket("ws://localhost:8000/ws");
+
+    socket.onopen = function () {
+      status.innerHTML += "Status: Connected\n";
+    };
+
+    socket.onmessage = function (e) {
+      output.innerHTML = e.data;
+    };
+  </script>
+</html>
+
+{{ end }}
